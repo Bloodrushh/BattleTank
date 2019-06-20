@@ -8,6 +8,9 @@
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
 
+class UTankBarrel;
+class UTankTurret;
+class AProjectile;
 UCLASS()
 class BATTLETANK_API ATank : public APawn
 {
@@ -20,8 +23,13 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Setup")
-	void SetBarrelReference(UStaticMeshComponent* BarrelToSet);
+	void SetBarrelReference(UTankBarrel* BarrelToSet);
 
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	void SetTurretReference(UTankTurret* TurretToSet);
+
+	UFUNCTION(BlueprintCallable, Category = "Firing")
+	void Fire();
 
 
 protected:
@@ -34,10 +42,17 @@ private:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	//Local Barrel reference for spawning projectile
+	UTankBarrel* Barrel = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Firing")
-	float LaunchSpeed = 100000 ; // TODO Find sensible default
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	float LaunchSpeed = 4000 ; 
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AProjectile> ProjectileBlueprint; // alternative is there: docs.unrealengine.com/latest/INT/Programming/UnrealArchitecture/TSubclassOf/index.html
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float ReloadTimeInSeconds = 3;
+
+	float LastFrieTime = 0;
 };
