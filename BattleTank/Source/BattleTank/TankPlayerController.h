@@ -2,10 +2,12 @@
 
 #pragma once
 
-#include "Tank.h"
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h" //must be the last include
+
+class ATank;
+class UTankAimingComponent;
 
 /**
  * 
@@ -24,9 +26,16 @@ public:
 	virtual void Tick(float DeltaTime) override;	
 
 
-private:
+protected:
 
+	UFUNCTION(BlueprintCallable, Category = "Setup")
 	ATank * GetControlledTank() const;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
+	void FoundAimingComponent(UTankAimingComponent* AimCompRef);
+
+private:
+	
 
 	// Start the tank moving the barrel so taht a shot would it where the crosshair intersects the world
 	void AimTowardsCrosshair();

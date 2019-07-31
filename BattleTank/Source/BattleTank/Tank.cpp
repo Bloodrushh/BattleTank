@@ -14,23 +14,33 @@ ATank::ATank()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	// No need to protect points as added at construction
-	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component"));	
+	auto TankName = GetName();
+	UE_LOG(LogTemp, Warning, TEXT("%s DONKEY::Tank CONSTRUCTOR called from CPP"),*TankName);
 
+	// No need to protect points as added at construction
+	//TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component"));	
 	//TankMovementComponent = CreateDefaultSubobject<UTankMovementComponent>(FName("Movement Component"));
+
+	//TankAimingComponent = Cast<UTankAimingComponent>(GetComponentByClass(UTankAimingComponent::StaticClass()));
+	//TankMovementComponent = Cast<UTankMovementComponent>(GetComponentByClass(UTankMovementComponent::StaticClass()));
 }
 
 void ATank::AimAt(FVector HitLocation)
 {
 	//auto OurTankName = GetName();
+	if (!TankAimingComponent) { return; }
 	TankAimingComponent->AimAt(HitLocation, LaunchSpeed);
 }
 
 // Called when the game starts or when spawned
 void ATank::BeginPlay()
 {
-	Super::BeginPlay();	
-	Test_Test();
+	Super::BeginPlay();	// Needed to BP begin play to run
+
+	auto TankName = GetName();
+	UE_LOG(LogTemp, Warning, TEXT("%s DONKEY::Tank BEGINPLAY called from CPP"),*TankName);
+
+	//Test_Test();
 }
 
 void ATank::Test_Test_Implementation()
@@ -49,23 +59,3 @@ void ATank::Fire()
 		LastFrieTime = GetWorld()->GetRealTimeSeconds();
 	}
 }
-
-
-
-// Called to bind functionality to input
-void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);	
-}
-
-void ATank::SetBarrelReference(UTankBarrel * BarrelToSet)
-{
-	TankAimingComponent->SetBarrelReference(BarrelToSet);
-	Barrel = BarrelToSet;
-}
-
-void ATank::SetTurretReference(UTankTurret * TurretToSet)
-{
-	TankAimingComponent->SetTurretReference(TurretToSet);
-}
-

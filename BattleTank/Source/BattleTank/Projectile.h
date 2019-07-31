@@ -28,6 +28,6 @@ public:
 	void LaunchPRojectile(float Speed);
 
 private:
-	UPROPERTY(VisibleAnywhere, Category = Movement)
+	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	UProjectileMovementComponent* ProjectileMovement = nullptr;
 };

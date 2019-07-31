@@ -2,11 +2,24 @@
 
 #include "TankPlayerController.h"
 #include "Engine/World.h"
+#include "Tank.h"
+#include "TankAimingComponent.h"
 
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	auto AimingComponent = GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
+	if (AimingComponent)
+	{
+		FoundAimingComponent(AimingComponent);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Player Controller cant find aiming component at begin play"),);
+	}
+
+	// TODO Delete lanes below
 	auto ControlledTank = GetControlledTank();
 	if (!ensure(ControlledTank != nullptr)) return;
 	UE_LOG(LogTemp, Warning, TEXT("Controlling pawn is : %s"), *ControlledTank->GetName());
